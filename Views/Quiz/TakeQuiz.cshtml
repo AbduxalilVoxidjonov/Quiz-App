@@ -1,0 +1,110 @@
+﻿@model Quiz_App.Models.Quiz
+
+@{
+    ViewData["Title"] = "Test Ishlash";
+    var currentQuestion = ViewBag.CurrentQuestion;
+    var totalQuestions = ViewBag.TotalQuestions;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <!-- Progress bar -->
+            <div class="mb-4">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Savol @currentQuestion / @totalQuestions</span>
+                    <span class="text-primary"><strong>@Model.Category.Name</strong></span>
+                </div>
+                <div class="progress" style="height: 25px;">
+                    <div class="progress-bar bg-success" 
+                         role="progressbar" 
+                         style="width: @((currentQuestion * 100) / totalQuestions)%" 
+                         aria-valuenow="@currentQuestion" 
+                         aria-valuemin="0" 
+                         aria-valuemax="@totalQuestions">
+                        @((currentQuestion * 100) / totalQuestions)%
+                    </div>
+                </div>
+            </div>
+
+            <!-- Savol kartasi -->
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white py-4">
+                    <h4 class="mb-0">
+                        <i class="bi bi-question-circle-fill"></i> Savol @currentQuestion
+                    </h4>
+                </div>
+                <div class="card-body p-5">
+                    <h3 class="mb-5">@Model.Question</h3>
+
+                    <form asp-action="CheckAnswer" method="post">
+                        <input type="hidden" name="quizId" value="@Model.Id" />
+                        
+                        <div class="d-grid gap-3">
+                            <!-- 1-javob -->
+                            <button type="submit" name="selectedAnswer" value="1" 
+                                    class="btn btn-outline-primary btn-lg text-start p-4 quiz-option">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-primary me-3" style="font-size: 18px;">A</span>
+                                    <span style="font-size: 18px;">@Model.Option1</span>
+                                </div>
+                            </button>
+
+                            <!-- 2-javob -->
+                            <button type="submit" name="selectedAnswer" value="2" 
+                                    class="btn btn-outline-primary btn-lg text-start p-4 quiz-option">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-primary me-3" style="font-size: 18px;">B</span>
+                                    <span style="font-size: 18px;">@Model.Option2</span>
+                                </div>
+                            </button>
+
+                            <!-- 3-javob -->
+                            <button type="submit" name="selectedAnswer" value="3" 
+                                    class="btn btn-outline-primary btn-lg text-start p-4 quiz-option">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-primary me-3" style="font-size: 18px;">C</span>
+                                    <span style="font-size: 18px;">@Model.Option3</span>
+                                </div>
+                            </button>
+
+                            <!-- 4-javob -->
+                            <button type="submit" name="selectedAnswer" value="4" 
+                                    class="btn btn-outline-primary btn-lg text-start p-4 quiz-option">
+                                <div class="d-flex align-items-center">
+                                    <span class="badge bg-primary me-3" style="font-size: 18px;">D</span>
+                                    <span style="font-size: 18px;">@Model.Option4</span>
+                                </div>
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Bekor qilish tugmasi -->
+                    <div class="text-center mt-4">
+                        <a asp-action="Category" class="btn btn-secondary">
+                            <i class="bi bi-x-circle"></i> Testni to'xtatish
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .quiz-option {
+        transition: all 0.3s ease;
+        border-width: 2px;
+    }
+    
+    .quiz-option:hover {
+        transform: translateX(10px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        background-color: #e7f3ff;
+        border-color: #0d6efd;
+    }
+    
+    .quiz-option:active {
+        transform: scale(0.98);
+    }
+</style>

@@ -1,0 +1,83 @@
+﻿@model IEnumerable<Quiz_App.Models.Category>
+
+@{
+    ViewData["Title"] = "Quiz list";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h5 class="display-4">Quiz list pagega xush kelibsiz</h5>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addQuizModal">
+            Add Category
+        </button>
+    </div>
+
+    <!-- Kategoriyalar ro'yxati -->
+    <div class="row">
+        @if (Model != null && Model.Any())
+        {
+            @foreach (var category in Model)
+            {
+                <div class="col-md-4 mb-3">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">@category.Name</h5>
+                            @if (!string.IsNullOrEmpty(category.Description))
+                            {
+                                <p class="card-text text-muted">@category.Description</p>
+                            }
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <small class="text-muted">@category.CreatedDate.ToString("dd.MM.yyyy")</small>
+                                <span class="badge bg-primary">@category.Quizzes.Count testlar</span>
+                            </div>
+                            @if (category.Quizzes.Count > 0)
+                            {
+                                <div class="mt-3">
+                                    <a asp-action="StartQuiz" asp-route-categoryId="@category.Id" class="btn btn-success w-100">
+                                        <i class="bi bi-play-circle-fill"></i> Test boshlash
+                                    </a>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <div class="col-12">
+                <div class="alert alert-info text-center">
+                    Hozircha kategoriyalar yo'q. Yangi kategoriya qo'shish uchun "Add Quiz" tugmasini bosing.
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="addQuizModal" tabindex="-1" aria-labelledby="addQuizModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addQuizModalLabel">Kategoriya Qo'shish</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-action="Create" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Kategoriya nomi</label>
+                        <input type="text" class="form-control" id="Name" name="Name" placeholder="Kategoriya nomini kiriting" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="Description" class="form-label">Ta'rif (ixtiyoriy)</label>
+                        <textarea class="form-control" id="Description" name="Description" rows="3" placeholder="Kategoriya haqida qisqacha ma'lumot"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Bekor qilish</button>
+                    <button type="submit" class="btn btn-success">Saqlash</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

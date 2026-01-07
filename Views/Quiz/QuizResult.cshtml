@@ -1,0 +1,123 @@
+﻿@{
+    ViewData["Title"] = "Test Natijalari";
+    var correctAnswers = ViewBag.CorrectAnswers;
+    var totalQuestions = ViewBag.TotalQuestions;
+    var percentage = ViewBag.Percentage;
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h2 class="mb-0">
+                        <i class="bi bi-trophy-fill"></i> Test Yakunlandi!
+                    </h2>
+                </div>
+                <div class="card-body text-center py-5">
+                    <!-- Foiz ko'rsatkichi -->
+                    <div class="mb-4">
+                        @if (percentage >= 80)
+                        {
+                            <div class="display-1 text-success mb-3">
+                                <i class="bi bi-emoji-smile-fill"></i>
+                            </div>
+                            <h3 class="text-success">A'lo natija!</h3>
+                        }
+                        else if (percentage >= 60)
+                        {
+                            <div class="display-1 text-warning mb-3">
+                                <i class="bi bi-emoji-neutral-fill"></i>
+                            </div>
+                            <h3 class="text-warning">Yaxshi natija!</h3>
+                        }
+                        else
+                        {
+                            <div class="display-1 text-danger mb-3">
+                                <i class="bi bi-emoji-frown-fill"></i>
+                            </div>
+                            <h3 class="text-danger">Yana harakat qiling!</h3>
+                        }
+                    </div>
+
+                    <!-- Natijalar -->
+                    <div class="row mt-5">
+                        <div class="col-md-4 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h1 class="display-4 text-primary">@totalQuestions</h1>
+                                    <p class="text-muted mb-0">Jami savollar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h1 class="display-4 text-success">@correctAnswers</h1>
+                                    <p class="text-muted mb-0">To'g'ri javoblar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card bg-light">
+                                <div class="card-body">
+                                    <h1 class="display-4 text-danger">@(totalQuestions - correctAnswers)</h1>
+                                    <p class="text-muted mb-0">Xato javoblar</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Foiz darajasi -->
+                    <div class="mt-4">
+                        <div class="progress" style="height: 40px;">
+                            <div class="progress-bar @(percentage >= 80 ? "bg-success" : percentage >= 60 ? "bg-warning" : "bg-danger")" 
+                                 role="progressbar" 
+                                 style="width: @percentage%" 
+                                 aria-valuenow="@percentage" 
+                                 aria-valuemin="0" 
+                                 aria-valuemax="100">
+                                <strong style="font-size: 20px;">@percentage%</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tugmalar -->
+                    <div class="mt-5">
+                        <a asp-action="Category" class="btn btn-primary btn-lg me-2">
+                            <i class="bi bi-house-fill"></i> Bosh sahifa
+                        </a>
+                        <a asp-action="Category" class="btn btn-success btn-lg">
+                            <i class="bi bi-arrow-repeat"></i> Yana test ishlash
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Motivatsion xabar -->
+            <div class="text-center mt-4">
+                @if (percentage >= 80)
+                {
+                    <p class="lead text-success">
+                        <i class="bi bi-star-fill"></i>
+                        <strong>Ajoyib!</strong> Sizning bilimingiz juda yaxshi darajada!
+                    </p>
+                }
+                else if (percentage >= 60)
+                {
+                    <p class="lead text-warning">
+                        <i class="bi bi-lightning-fill"></i>
+                        <strong>Yaxshi!</strong> Yana bir oz mashq qiling va mukammal bo'lasiz!
+                    </p>
+                }
+                else
+                {
+                    <p class="lead text-info">
+                        <i class="bi bi-book-fill"></i>
+                        <strong>Taslim bo'lmang!</strong> Ko'proq o'qing va takror urinib ko'ring!
+                    </p>
+                }
+            </div>
+        </div>
+    </div>
+</div>

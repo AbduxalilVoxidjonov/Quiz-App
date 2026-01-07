@@ -1,0 +1,162 @@
+﻿@model IEnumerable<Quiz_App.Models.UserProgress>
+
+@{
+    ViewData["Title"] = "Mening Progressim";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-graph-up"></i> Mening Progresim</h2>
+        <a asp-action="Category" class="btn btn-primary">
+            <i class="bi bi-arrow-left"></i> Orqaga
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <!-- Statistika kartlari -->
+        <div class="row mb-4">
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-primary">@Model.Count()</h3>
+                        <p class="text-muted mb-0">Jami urinishlar</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-success">@Model.Max(p => p.Score)%</h3>
+                        <p class="text-muted mb-0">Eng yaxshi natija</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-info">@((int)Model.Average(p => p.Score))%</h3>
+                        <p class="text-muted mb-0">O'rtacha natija</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-center shadow-sm">
+                    <div class="card-body">
+                        <h3 class="text-warning">@Model.GroupBy(p => p.CategoryId).Count()</h3>
+                        <p class="text-muted mb-0">Kategoriyalar</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kategoriyalar bo'yicha natijalar -->
+        @foreach (var categoryGroup in Model.GroupBy(p => p.Category))
+        {
+            var category = categoryGroup.Key;
+            var attempts = categoryGroup.OrderByDescending(p => p.AttemptDate).ToList();
+            
+            <div class="card mb-4 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">
+                        <i class="bi bi-folder-fill"></i> @category.Name
+                        <span class="badge bg-light text-primary float-end">@attempts.Count urinish</span>
+                    </h4>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Sana</th>
+                                    <th>Savollar</th>
+                                    <th>To'g'ri javoblar</th>
+                                    <th>Natija</th>
+                                    <th>Baho</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var attempt in attempts)
+                                {
+                                    <tr>
+                                        <td><strong>@attempt.AttemptNumber</strong></td>
+                                        <td>
+                                            <i class="bi bi-calendar3"></i> 
+                                            @attempt.AttemptDate.ToString("dd.MM.yyyy")
+                                            <br/>
+                                            <small class="text-muted">
+                                                <i class="bi bi-clock"></i> 
+                                                @attempt.AttemptDate.ToString("HH:mm")
+                                            </small>
+                                        </td>
+                                        <td>@attempt.TotalQuestions ta</td>
+                                        <td>
+                                            <span class="badge bg-success">@attempt.CorrectAnswers to'g'ri</span>
+                                            <span class="badge bg-danger">@(attempt.TotalQuestions - attempt.CorrectAnswers) xato</span>
+                                        </td>
+                                        <td>
+                                            <div class="progress" style="width: 150px; height: 25px;">
+                                                <div class="progress-bar @(attempt.Score >= 80 ? "bg-success" : attempt.Score >= 60 ? "bg-warning" : "bg-danger")" 
+                                                     role="progressbar" 
+                                                     style="width: @attempt.Score%">
+                                                    <strong>@attempt.Score%</strong>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if (attempt.Score >= 80)
+                                            {
+                                                <span class="badge bg-success" style="font-size: 16px;">
+                                                    <i class="bi bi-emoji-smile-fill"></i> A'lo
+                                                </span>
+                                            }
+                                            else if (attempt.Score >= 60)
+                                            {
+                                                <span class="badge bg-warning" style="font-size: 16px;">
+                                                    <i class="bi bi-emoji-neutral-fill"></i> Yaxshi
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger" style="font-size: 16px;">
+                                                    <i class="bi bi-emoji-frown-fill"></i> Qoniqarsiz
+                                                </span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <!-- Kategoriya statistikasi -->
+                    <div class="row mt-3">
+                        <div class="col-md-6">
+                            <div class="alert alert-info mb-0">
+                                <strong><i class="bi bi-trophy-fill"></i> Eng yaxshi natija:</strong> 
+                                @attempts.Max(a => a.Score)%
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="alert alert-secondary mb-0">
+                                <strong><i class="bi bi-graph-up"></i> O'rtacha natija:</strong> 
+                                @((int)attempts.Average(a => a.Score))%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <h4><i class="bi bi-info-circle"></i> Hozircha natijalar yo'q</h4>
+            <p>Test ishlashni boshlash uchun kategoriyalardan birini tanlang.</p>
+            <a asp-action="Category" class="btn btn-primary mt-3">
+                <i class="bi bi-play-circle-fill"></i> Test boshlash
+            </a>
+        </div>
+    }
+</div>

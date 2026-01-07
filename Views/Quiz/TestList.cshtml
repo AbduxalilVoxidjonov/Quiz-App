@@ -1,0 +1,81 @@
+﻿@model IEnumerable<Quiz_App.Models.Quiz>
+
+@{
+    ViewData["Title"] = "Test Ro'yxati";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Barcha Testlar</h2>
+        <a asp-action="Add" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Yangi Test Qo'shish
+        </a>
+    </div>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table table-hover table-striped">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Savol</th>
+                        <th>Kategoriya</th>
+                        <th>Javoblar</th>
+                        <th>To'g'ri Javob</th>
+                        <th>Yaratilgan Sana</th>
+                        <th>Amallar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{ int index = 1; }
+                    @foreach (var quiz in Model)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td><strong>@(quiz.Question.Length > 50 ? quiz.Question.Substring(0, 50) + "..." : quiz.Question)</strong></td>
+                            <td>
+                                <span class="badge bg-info">@quiz.Category.Name</span>
+                            </td>
+                            <td>
+                                <small>
+                                    1) @(quiz.Option1.Length > 20 ? quiz.Option1.Substring(0, 20) + "..." : quiz.Option1)<br/>
+                                    2) @(quiz.Option2.Length > 20 ? quiz.Option2.Substring(0, 20) + "..." : quiz.Option2)<br/>
+                                    3) @(quiz.Option3.Length > 20 ? quiz.Option3.Substring(0, 20) + "..." : quiz.Option3)<br/>
+                                    4) @(quiz.Option4.Length > 20 ? quiz.Option4.Substring(0, 20) + "..." : quiz.Option4)
+                                </small>
+                            </td>
+                            <td>
+                                <span class="badge bg-success">@quiz.CorrectAnswer-javob</span>
+                            </td>
+                            <td>@quiz.CreatedDate.ToString("dd.MM.yyyy HH:mm")</td>
+                            <td>
+                               <div class="d-flex gap-2">
+                                    <a href="#" class="btn btn-sm btn-info text-white rounded-circle" title="Ko'rish" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-eye-fill"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-sm btn-warning text-white rounded-circle" title="Tahrirlash" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <form asp-action="Delete" asp-route-id="@quiz.Id" method="post" class="d-inline" onsubmit="return confirm('Rostdan ham o\'chirmoqchimisiz?')">
+                                        <button type="submit" class="btn btn-sm btn-danger rounded-circle" title="O'chirish" style="width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="bi bi-trash-fill"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        index++;
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info text-center">
+            <h4>Hozircha testlar mavjud emas</h4>
+            <p>Yangi test qo'shish uchun yuqoridagi tugmani bosing.</p>
+        </div>
+    }
+</div>
